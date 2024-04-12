@@ -1,11 +1,11 @@
 {
 "tables": {
-    "ingress::ipv6_outer_lpm": {
+    "ingress::ipv6_lpm": {
         "rules": [
         {
             "name": "to_vf0_0",
             "match": 
-                { "ipv6_outer.dst_addr" : { "value" : "fc00::1" } },
+                { "ipv6.dst_addr" : { "value" : "fc00::1" } },
             "action": {
                 "type": "ingress::ipv6_forward",
                 "data": {
@@ -21,7 +21,7 @@
         {
             "name": "to_vf0_1",
             "match": 
-                { "ipv6_outer.dst_addr": { "value": "fc00::2" } },
+                { "ipv6.dst_addr": { "value": "fc00::2" } },
             "action": {
                 "type": "ingress::ipv6_forward",
                 "data": {
@@ -37,7 +37,7 @@
         {
             "name": "to_vf0_1_srv6",
             "match": 
-                { "ipv6_outer.dst_addr": { "value": "fcf0:12::100" } },
+                { "ipv6.dst_addr": { "value": "fcf0:12::100" } },
             "action": {
                 "type": "ingress::ipv6_forward",
                 "data": {
@@ -53,7 +53,7 @@
         {
             "name": "to_vf0_2_srv6",
             "match": 
-                { "ipv6_outer.dst_addr": { "value": "fcf0:23::6006" } },
+                { "ipv6.dst_addr": { "value": "fcf0:23::6006" } },
             "action": {
                 "type": "ingress::ipv6_forward",
                 "data": {
@@ -69,7 +69,7 @@
         {
             "name": "to_vf0_2_srv6",
             "match": 
-                { "ipv6_outer.dst_addr": { "value": "fcf0:23::9009" } },
+                { "ipv6.dst_addr": { "value": "fcf0:23::9009" } },
             "action": {
                 "type": "ingress::ipv6_forward",
                 "data": {
@@ -85,7 +85,7 @@
 	{
             "name": "to_vf0_2",
             "match": 
-                { "ipv6_outer.dst_addr": { "value": "fc00::3" } },
+                { "ipv6.dst_addr": { "value": "fc00::3" } },
             "action": {
                 "type": "ingress::ipv6_forward",
                 "data": {
@@ -101,7 +101,7 @@
 	{
             "name": "to_vf0_3",
             "match": 
-                { "ipv6_outer.dst_addr": { "value": "fc00::4" } },
+                { "ipv6.dst_addr": { "value": "fc00::4" } },
             "action": {
                 "type": "ingress::ipv6_forward",
                 "data": {
@@ -117,7 +117,7 @@
         {
             "name": "to_vf0_4",
             "match": 
-                { "ipv6_outer.dst_addr": { "value": "fc00::5" } },
+                { "ipv6.dst_addr": { "value": "fc00::5" } },
             "action": {
                 "type": "ingress::ipv6_forward",
                 "data": {
@@ -133,7 +133,7 @@
     {
             "name": "to_vf0_5",
             "match": 
-                { "ipv6_outer.dst_addr": { "value": "fc00::8" } },
+                { "ipv6.dst_addr": { "value": "fc00::8" } },
             "action": {
                 "type": "ingress::ipv6_forward",
                 "data": {
@@ -149,7 +149,7 @@
     {
             "name": "to_vf0_6",
             "match": 
-                { "ipv6_outer.dst_addr": { "value": "fc00::9" } },
+                { "ipv6.dst_addr": { "value": "fc00::9" } },
             "action": {
                 "type": "ingress::ipv6_forward",
                 "data": {
@@ -165,7 +165,7 @@
     {
             "name": "to_vf0_6_RAN",
             "match": 
-                { "ipv6_outer.dst_addr": { "value": "fc20::2" } },
+                { "ipv6.dst_addr": { "value": "fc20::2" } },
             "action": {
                 "type": "ingress::ipv6_forward",
                 "data": {
@@ -181,7 +181,7 @@
         {
             "name": "to_vf0_5_UPF",
             "match": 
-                { "ipv6_outer.dst_addr": { "value": "fc10::2" } },
+                { "ipv6.dst_addr": { "value": "fc10::2" } },
             "action": {
                 "type": "ingress::ipv6_forward",
                 "data": {
@@ -194,72 +194,6 @@
                 }
             }
             }
-        ]
-     },
-     "ingress::teid_exact": {
-        "rules": [
-        {
-            "name": "teid_32",
-            "match": 
-                { "gtp.teid" : { "value" : "32" } },
-            "action": {
-                "type": "ingress::build_srv63",
-                "data": {
-                    "s2": { 
-                        "value": "fcf0:23::6006" 
-                    },
-                    "s3": { 
-                        "value": "fcf0:12::100" 
-                    }
-                }
-            }
-    },
-    {
-            "name": "clientNmap",
-            "match": 
-                { "ipv6_inner.src_addr" : { "value" : "fc10::10" } },
-            "action": {
-                "type": "ingress::build_srv63",
-                "data": {
-                    "s2": { 
-                        "value": "fcf0:23::6006" 
-                    },
-                    "s3": { 
-                        "value": "fcf0:12::100" 
-                    }
-                }
-            }
-        }
-    ]
-    },
-    "ingress::pop": {
-        "rules": [
-        {
-            "name": "sid_pop_to_UPF",
-            "match": 
-            { "ipv6_outer.dst_addr": { "value": "fc00::5" } },
-            "action": {
-                "type": "ingress::srv6_pop",
-                "data": {
-                    "hop": { 
-                        "value": "64" 
-                    }
-                }
-            }
-        },
-        {
-            "name": "sid_pop_to_RAN",
-            "match": 
-            { "ipv6_outer.dst_addr": { "value": "fc00::1" } },
-            "action": {
-                "type": "ingress::srv6_pop",
-                "data": {
-                    "hop": { 
-                        "value": "64" 
-                    }
-                }
-            }
-        }
         ]
     }
 }
