@@ -64,7 +64,7 @@ sudo /opt/netronome/p4/bin/./rtecli tables -i 0 list-rules
 
 Agora a sua placa está devidamente configurada com um código simples, que encaminhará dados de uma porta virtual para outra usando IPv6. Você pode utilizar os códigos python send_pkt.py e receive.py, onde o primeiro enviará um pacote da interface v0.0 para a interface v0.3. E o segundo programa realizará a captura do pacote na interface de destino.
 
-
+Para executar os programas de teste, abra dois shells, navegue até este diretório e no primeiro shell de o comando `python3 receive.py`. O programa será executado e ficará na espera de qualquer pacote recebido na interface v0.3. Após isto, no segundo terminal, execute `python3 send_pkt.py`. Após isto, um pacote será enviado na interface v0.0 com destino ao v0.3. 
 
 
 
