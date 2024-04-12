@@ -7,14 +7,12 @@ import socket
 import random
 import argparse
 import time
-import gpt2
 
 from scapy.all import sniff, send, sendp, hexdump, get_if_list, get_if_hwaddr, hexdump, sr1,sr
 from scapy.all import Packet, IPOption
 from scapy.all import ShortField, IntField, LongField, BitField, FieldListField, FieldLenField
 from scapy.all import IP, IPv6, TCP, UDP, Raw, Ether
 from scapy.layers.inet import _IPOption_HDR
-from gpt2 import *
 from scapy import all
 
 def get_if():
