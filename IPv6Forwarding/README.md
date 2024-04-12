@@ -1,3 +1,14 @@
+# Tutorial de programação P4 em placas Netronome
+Este tutorial oferece uma introdução básica à programação P4 (Programming Protocol-independent Packet Processors) em placas Netronome, uma abordagem para definir o comportamento da rede diretamente no hardware. Abordaremos a configuração do ambiente de desenvolvimento, o a apresentação de um programa P4 simples e a execução do programa em uma placa Netronome.
+
+# Pré-requisitos
+- Conhecimento básico de redes de computadores.
+- Familiaridade com Linux e linha de comando.
+- Acesso a uma placa Netronome (neste tutorial é utilizada a placa Netronome Agilio CX 2x10Gb)
+
+# Instalação e configuração do Ambiente.
+Para realizar a instalação dos drivers e módulos necessários, além da configuração do ambiente, acesse o diretório Agilio-P4-SmartNIC, e siga o tutorial apresetado.
+
 # When SRv6 meets 5G Core: Implementation and Deployment of a Network Service Chaining Function in SmartNICs
 
 ## Abstract
