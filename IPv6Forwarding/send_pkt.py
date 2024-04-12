@@ -13,7 +13,7 @@ from scapy.all import Ether, IP, IPv6, UDP, TCP
 def main():
     iface = "vf0_0" 
 
-    print "sending on interface %s" % (iface)
+    print("sending on interface " + iface)
     pkt =  Ether(src='00:15:4d:00:00:00', dst='00:15:4d:00:00:03')
     pkt = pkt / IPv6(dst="fc00::4" , src="fc00::1") #/ UDP() #/ sys.argv[1]
     pkt.show2()

@@ -76,8 +76,9 @@ Once this is done, proceed with the inca code P4. You have to clone this reposit
 ```
 git clone git@github.com:guimvmatos/P4-INCA.git
 cd P4-INCA
-sudo /opt/netronome/p4/bin/./nfp4build --nfp4c_p4_version 16 --no-debug-info -p out -o firmware.nffw -l lithium -4 entryv2.p4
+sudo /opt/netronome/p4/bin/./nfp4build --nfp4c_p4_version 16 --no-debug-info -p out -o firmware.nffw -l lithium -4 ipv6_forward.p4
 sudo /opt/netronome/p4/bin/./rtecli design-load -f firmware.nffw -p out/pif_design.json
+sudo /opt/netronome/p4/bin/rtecli config-reload -c user_config.json
 ```
 
 If you want, you can check the configured rules.
