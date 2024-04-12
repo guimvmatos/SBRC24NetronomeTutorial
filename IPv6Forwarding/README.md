@@ -21,17 +21,7 @@ By following these steps, you will be ready to start developing and running your
 
 ## Details about Netronome architecture
 
-The Netronome SmartNIC uses single-root input/output virtualization (SRIOV), which enables virtual functions (VFs) to be created from a physical function (PF). The VFs thus share the resources of a PF, while VFs remain isolated from each other. The isolated VFs are typically assigned to virtual machines (VMs) on the host. In this way, the VFs allow the VMs to directly access the PCI device, thereby bypassing the host kernel. In this tutorial, we have two physical (p0, p1) and four virtual interfaces (Vf0\_1 to Vf0\_5). We will work with a p4 ipv6 forwarding bla bal bal
-
-### Link to a DEMO Presentation published on 2021 P4 Workshop
-- https://www.youtube.com/watch?v=0BnOH88fgGU
-
-This work is divided into three repositories:
-- P4-INCA: The main contribution. Here you can find the INCA P4 code for Netronome Agilio SmartNIC and its instructions to deploy it and configure.
-- [P4-BMv2-RAN-UPF](https://github.com/guimvmatos/P4-BMv2-RAN-UPF): Auxiliary P4 code to build a RAN and UPF on context of 5G simulations for INCA Project.
-- [SFC-SRv6-topology](https://github.com/guimvmatos/SFC-SRv6-topology): Repository with instructions to complete the construction of the necessary topology for INCA tests and simulations.
-
-
+The Netronome SmartNIC uses single-root input/output virtualization (SRIOV), which enables virtual functions (VFs) to be created from a physical function (PF). The VFs thus share the resources of a PF, while VFs remain isolated from each other. The isolated VFs are typically assigned to virtual machines (VMs) on the host. In this way, the VFs allow the VMs to directly access the PCI device, thereby bypassing the host kernel. In this tutorial, we have two physical (p0, p1) and four virtual interfaces (Vf0\_1 to Vf0\_5). We will work with a P4 that implements a simple ipv6 forwarding, that can be found at IPv6Forwarding
 # Deployment
 
 To reproduce these repositories, you'll need the following requirements:
