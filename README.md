@@ -10,7 +10,10 @@ The tutorial is designed in a simple and straightforward manner, aiming to abstr
 -Access to a Netronome SmartNIC (in this tutorial, we will use the Netronome Agilio CX 2x10Gb).
 
 # Installation and Environment Setup
-To install the necessary drivers and modules and configure the environment, follow the instructions below:
+To install the necessary drivers and modules and configure the environment, follow the instructions below, as root:
+
+`cd ~'`
+`git clone git clone https://github.com/guimvmatos/SBRC24NetronomeTutorial.git`
 
 - Access the Agilio-P4-SmartNIC directory.
 - Follow the presented tutorial to install the required drivers and modules.
@@ -25,29 +28,33 @@ The Netronome SmartNIC uses single-root input/output virtualization (SRIOV), whi
 
 Here we'll show how to deploy, configure, and debug your programs on Netronome SmartNICs. We are taking into consideration that you already clone this repository and that your environment is already installed and configured.
 
-Once you already have your netronome installed and configured on you machine, you need to locate the src/p4-16 folder, inside the Agilio-P4-SmartNIC directory. This folder contains all the programs that you can run on your Netronome SmartNIC. Você poderá inclusive encontrar programas diferentes deste que vamos testar. Para começar, certifique-se de que esteja dentro da pasta p4-16, e então crie uma pasta chamada SimpleIPv6. Após isto, copie o conteúdo da pasta IPv6Forwarding para a pasta que acabou de criar:
+Once you already have your Netronome installed and configured on your machine, you need to locate the src/p4-16 folder, inside the Agilio-P4-SmartNIC directory (probably in `/root/SBRC24NetronomeTutorial/Agilio-P4-SmartNIC/src`). This folder contains all the programs that you can run on your Netronome SmartNIC. You may even find different programs from the one we are going to test. To get started, make sure you are inside the p4-16 folder, and then create a folder called SimpleIPv6. After that, copy the contents of the IPv6Forwarding folder into the folder you just created:
 ```
+cd /root/SBRC24NetronomeTutorial/Agilio-P4-SmartNIC/src
 mkdir SimpleIPv6
-cd SimpleIPv6
-cp /IPv6Forwarding/ipv6_forwarding.p4 .
-cp /IPv6Forwarding/user_config.json .
+cd SimpleIPv6/
+cp ../../../IPv6Forwarding/ipv6_forward.p4 ./
+cp ../../../IPv6Forwarding/user_config.json ./
 ```
 
-Para programação em P4 usando netronome, estes dois arquivos são tudo o que é necessário. O arquivo ipv6_forwarding.p4 representa o nosso programa propriamente disto. E o user_config.json é o arquivo que irá popular as tabelas do plano de controle. Como este tutorial é para aqueles que já conhecem a linhaguem de programação P4, não vamos entrar em detalhes. No entanto, um problema muito comum daqueles que estão começando a programar usando smartnics Netronome é em como realizar a atribuição de interfaces na tabela do plano de dados. Por exemplo, olhando o código P4, podemos encontrar seguinte ação:
+For P4 programming using Netronome, these two files are all that is needed. The ipv6_forwarding.p4 file represents our program itself. And the user_config.json is the file that will populate the control plane tables. As this tutorial is for those who are already familiar with the P4 programming language, we will not go into details. However, a very common issue for those who are starting to program using Netronome SmartNICs is how to perform interface assignment in the data plane table. For example, looking at the P4 code, we can find the following action:
 
 ```action ipv6_forward (macAddr_t dstAddr, egressSpec_t port) {
         standard_metadata.egress_spec = port;
         hdr.ethernet.dstAddr = dstAddr;
 ```
+
 Esta ação receberá uma porta com parametro, que será a porta de saída do pacote em questão. Quando estamos trabalhando com smartnics Netronome, temos as interfaces físicas e as virtuais. You can configure this setting by editing the following file: `/lib/systemd/system/nfp-sdk6-rte.service`. locate and change the following line.
+
+This action will receive a port as a parameter, which will be the output port of the packet. When we are working with Netronome SmartNICs, we have physical and virtual interfaces. You can configure this setting by editing the following file: `/lib/systemd/system/nfp-sdk6-rte.service`. Locate and change the following line.
 
 `Environment=NUM_VFS=4`
 
-Com esta configuração, você terá 4 interfaces virtuais, chamadas de VFs. E elas podem ser instanciadas nas tabelas do plano de controle como "v0.0", "v0.1", "v0.2" e v0.3". Caso queira utilizar as interfaces físicas, deverá chama-las de "p0" e "p1". 
+With this configuration, you will have 4 virtual interfaces, called VFs. And they can be instantiated in the control plane tables as "v0.0", "v0.1", "v0.2", and "v0.3". If you want to use the physical interfaces, you should refer to them as "p0" and "p1".
 
-No arquivo user_config.json podemos encontrar exemplos de como popular as tabelas do plano de controle utilizando a nomenclatura supracitada. 
+In the user_config.json file, we can find examples of how to populate the control plane tables using the aforementioned nomenclature.
 
-Bom, agora que já copiamos os dois arquivos necessários, devemos chamar o compilardor passando o arquivo P4 como parametro para que seja criado um firmware. Depois vamos implantar o firmware na placa e por ultimo vamos popular as tabelas do plano de controle. Para isto, dê os seguintes comandos:
+Now that we have copied the two necessary files, we should call the compiler passing the P4 file as a parameter to create firmware. Then, we will deploy the firmware to the board, and finally, we will populate the control plane tables. To do this, execute the following commands:
 
 ```
 sudo /opt/netronome/p4/bin/./nfp4build --nfp4c_p4_version 16 --no-debug-info -p out -o firmware.nffw -l lithium -4 ipv6_forward.p4
@@ -55,20 +62,20 @@ sudo /opt/netronome/p4/bin/./rtecli design-load -f firmware.nffw -p out/pif_desi
 sudo /opt/netronome/p4/bin/rtecli config-reload -c user_config.json
 ```
 
-Para debugar, você poderá olhar os logs em `/var/log/nfp-sdk6-rte.log`. Aqui serão encontrados todos os erros referentes ao serviço, implantação e utilização. Ou seja, caso tenha problemas em inicializar o serviço ou implantação do programação, poderá encontrar os logs e entender melhor o que está acontecendo. 
+To debug, you can look at the logs in /var/log/nfp-sdk6-rte.log. Here you will find all errors related to the service, deployment, and usage. In other words, if you encounter issues with initializing the service or deploying the program, you can find the logs and better understand what is happening.
 
-Obs: após a criação do firmware, você notará que muitos arquivos foram criados. Não se preocupe, é normal.
+Note: after creating the firmware, you will notice that many files have been generated. Don't worry, this is normal.
 
-Sobre a configuração do plano de controle, if you want, you can check the configured rules.
+About the control plane configuration, if you want, you can check the configured rules.
 ```
 sudo /opt/netronome/p4/bin/./rtecli tables -i 0 list-rules
 ```
 
-Agora a sua placa está devidamente configurada com um código simples, que encaminhará dados de uma porta virtual para outra usando IPv6. Você pode utilizar os códigos python send_pkt.py e receive.py, onde o primeiro enviará um pacote da interface v0.0 para a interface v0.3. E o segundo programa realizará a captura do pacote na interface de destino.
+Now your board is properly configured with a simple code that will forward data from one virtual port to another using IPv6. You can use the Python scripts send_pkt.py and receive.py, where the first one will send a packet from interface v0.0 to interface v0.3. And the second one will capture the packet on the destination interface.
 
-Para executar os programas de teste, abra dois shells, navegue até este diretório e no primeiro shell de o comando `python3 receive.py`. O programa será executado e ficará na espera de qualquer pacote recebido na interface v0.3. Após isto, no segundo terminal, execute `python3 send_pkt.py`. Após isto, um pacote será enviado na interface v0.0 com destino ao v0.3. A execução destes programas python dependem da configuração de cada computador e da versão do python.
+To run the test programs, open more two shells, navigate `/root/SBRC24NetronomeTutorial/IPv6Forwarding` directory, and in the first shell, run the command `python3 receive.py`. The program will execute and wait for any packet received on interface v0.3. After that, in the second terminal, run `python3 send_pkt.py`. Following this, a packet will be sent on interface v0.0 destined for v0.3. The execution of these Python programs depends on the configuration of each computer and the version of Python.
 
-Caso a execução dos programas tenham sido bem sucedidos, parabens, você concluiu este tutorial e o programa e está pronto para o próximo passo. Caso tenha interesse em se aprofundar mais e realizar funções mais avanças, talvez [este repositório]{https://github.com/guimvmatos/P4-INCA} lhe interessará. Nele há também um tutorial para implantação de um programa mais avançado, utilizando SRv6 para conectar o trafego de várias maquinas virtuais. Fique a vontade para conhecer e tentar.
+If the execution of the programs was successful, congratulations! You have completed this tutorial, and the program is ready for the next step. If you are interested in delving deeper and performing more advanced functions, perhaps [this repository](https://github.com/guimvmatos/P4-INCA) will interest you. There, you will also find a tutorial for deploying a more advanced program, using SRv6 to connect traffic from multiple virtual machines. Feel free to explore and give it a try.
 
 
 
