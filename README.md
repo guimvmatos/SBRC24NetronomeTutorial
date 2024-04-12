@@ -47,7 +47,7 @@ Com esta configuração, você terá 4 interfaces virtuais, chamadas de VFs. E e
 
 No arquivo user_config.json podemos encontrar exemplos de como popular as tabelas do plano de controle utilizando a nomenclatura supracitada. 
 
-Bom, agora que já copiamos os dois arquivos necessários, devemos chamar o compilardor passando o arquivo P4 como parametro para que seja criado um arquivo binário. Depois vamos implantar o arquivo criado na placa e por ultimo vamos popular as tabelas do plano de controle. Para isto, dê os seguintes comandos:
+Bom, agora que já copiamos os dois arquivos necessários, devemos chamar o compilardor passando o arquivo P4 como parametro para que seja criado um firmware. Depois vamos implantar o firmware na placa e por ultimo vamos popular as tabelas do plano de controle. Para isto, dê os seguintes comandos:
 
 ```
 sudo /opt/netronome/p4/bin/./nfp4build --nfp4c_p4_version 16 --no-debug-info -p out -o firmware.nffw -l lithium -4 ipv6_forward.p4
@@ -55,7 +55,9 @@ sudo /opt/netronome/p4/bin/./rtecli design-load -f firmware.nffw -p out/pif_desi
 sudo /opt/netronome/p4/bin/rtecli config-reload -c user_config.json
 ```
 
-Para debugar, você poderá olhar os logs em `/var/log/nfp-sdk6-rte.log`. Aqui serão encontrados todos os erros referentes ao serviço, implantação e utilização. Ou seja, caso tenha problemas em inicializar o serviço ou implantação do programação, poderá encontrar os logs e entender melhor o que está acontecendo.
+Para debugar, você poderá olhar os logs em `/var/log/nfp-sdk6-rte.log`. Aqui serão encontrados todos os erros referentes ao serviço, implantação e utilização. Ou seja, caso tenha problemas em inicializar o serviço ou implantação do programação, poderá encontrar os logs e entender melhor o que está acontecendo. 
+
+Obs: após a criação do firmware, você notará que muitos arquivos foram criados. Não se preocupe, é normal.
 
 Sobre a configuração do plano de controle, if you want, you can check the configured rules.
 ```
@@ -64,7 +66,9 @@ sudo /opt/netronome/p4/bin/./rtecli tables -i 0 list-rules
 
 Agora a sua placa está devidamente configurada com um código simples, que encaminhará dados de uma porta virtual para outra usando IPv6. Você pode utilizar os códigos python send_pkt.py e receive.py, onde o primeiro enviará um pacote da interface v0.0 para a interface v0.3. E o segundo programa realizará a captura do pacote na interface de destino.
 
-Para executar os programas de teste, abra dois shells, navegue até este diretório e no primeiro shell de o comando `python3 receive.py`. O programa será executado e ficará na espera de qualquer pacote recebido na interface v0.3. Após isto, no segundo terminal, execute `python3 send_pkt.py`. Após isto, um pacote será enviado na interface v0.0 com destino ao v0.3. 
+Para executar os programas de teste, abra dois shells, navegue até este diretório e no primeiro shell de o comando `python3 receive.py`. O programa será executado e ficará na espera de qualquer pacote recebido na interface v0.3. Após isto, no segundo terminal, execute `python3 send_pkt.py`. Após isto, um pacote será enviado na interface v0.0 com destino ao v0.3. A execução destes programas python dependem da configuração de cada computador e da versão do python.
+
+Caso a execução dos programas tenham sido bem sucedidos, parabens, você concluiu este tutorial e o programa e está pronto para o próximo passo. Caso tenha interesse em se aprofundar mais e realizar funções mais avanças, talvez [este repositório]{https://github.com/guimvmatos/P4-INCA} lhe interessará. Nele há também um tutorial para implantação de um programa mais avançado, utilizando SRv6 para conectar o trafego de várias maquinas virtuais. Fique a vontade para conhecer e tentar.
 
 
 
