@@ -25,7 +25,7 @@ def get_if():
             iface=i
             break;
     if not iface:
-        print "Cannot find eth1 interface"
+        #print "Cannot find eth1 interface"
         exit(1)
     return iface
 
@@ -52,11 +52,11 @@ def handle_pkt(pkt):
 def main():
     ifaces = filter(lambda i: 'eth' in i, os.listdir('/sys/class/net/'))
     iface = "vf0_3"
-    print "sniffing on %s" % iface
+    #print "sniffing on %s" % iface
     sys.stdout.flush()
     sniff(iface = iface,
           prn = lambda x: handle_pkt(x))
-    print "teste"
+    #print "teste"
 
 if __name__ == '__main__':
     main()
